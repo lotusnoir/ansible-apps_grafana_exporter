@@ -1,0 +1,50 @@
+---
+- name: "Check for grafana_exporter binary"
+  stat:
+    path: "/usr/local/bin/grafana_exporter"
+  changed_when: false
+  register: grafana_exporter_install
+
+- when: not grafana_exporter_install.stat.exists
+  block:
+    - name: "Download grafana_exporter..."
+      get_url:
+        url: '{{ grafana_exporter_tgz_url }}'
+        dest: /tmp/{{ grafana_exporter_tgz }}
+        timeout: 120
+        mode: 0644
+
+    - name: "Ensure tomcat directory exists"
+      file:
+        path: '{{ grafana_exporter_install_dir }}'
+        state: directory
+        mode: 0755
+
+    - name: "Unarchive grafana_exporter..."
+      unarchive:
+        src: /tmp/{{ grafana_exporter_tgz }}
+        dest: '{{ grafana_exporter_install_dir }}'
+        extra_opts: [--strip-components=1]
+        remote_src: true
+        mode: 0644
+
+    - name: "Copy grafana_exporter binary..."
+      copy:
+        src: '{{ grafana_exporter_install_dir }}/grafana_exporter'
+        dest: '/usr/local/bin/'
+        remote_src: true
+        mode: '0755'
+
+- name: "Create systemd for grafana_exporter"
+  template:
+    src: grafana_exporter.service
+    dest: /lib/systemd/system/
+    mode: 0644
+  notify: "restart grafana_exporter"
+
+- name: "Start grafana_exporter.service"
+  systemd:
+    name: grafana_exporter
+    state: started
+    enabled: true
+    daemon_reload: true

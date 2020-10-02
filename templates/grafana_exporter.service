@@ -1,0 +1,18 @@
+{{ ansible_managed | comment }}                                                                                                                                                                                                               
+
+[Unit]
+Description=Prometheus grafana Exporter
+After=network-online.target
+StartLimitInterval=0
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/local/bin/grafana_exporter --grafana.uri=localhost:9092 --web.listen-address=:9113
+ExecReload=/bin/kill -HUP $MAINPID
+SyslogIdentifier=grafana_exporter
+RestartSec=1
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

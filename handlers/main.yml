@@ -1,0 +1,5 @@
+---
+- name: "restart grafana_exporter"
+  service:
+    name: "grafana_exporter"
+    state: "restarted"
