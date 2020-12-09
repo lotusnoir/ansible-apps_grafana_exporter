@@ -1,5 +1,12 @@
 ---
-grafana_exporter_version:   "0.1.0"
-grafana_exporter_tgz:       "grafana_exporter-{{ grafana_exporter_version }}.linux-amd64.tar.gz"
-grafana_exporter_tgz_url:   "https://github.com/frodenas/grafana_exporter/releases/download/v{{ grafana_exporter_version }}/{{ grafana_exporter_tgz }}"
-grafana_exporter_install_dir: /tmp/grafana_exporter
+# Binary install
+grafana_exporter_version: "0.1.0"
+grafana_exporter_tgz: "grafana_exporter-{{ grafana_exporter_version }}.linux-amd64.tar.gz"
+grafana_exporter_tgz_url: "https://github.com/frodenas/grafana_exporter/releases/download/v{{ grafana_exporter_version }}/{{ grafana_exporter_tgz }}"
+grafana_exporter_temp_dir: "/tmp"
+grafana_exporter_install_dir: "/usr/local/bin"
+grafana_exporter_force_install: false
+
+# Systemd options
+grafana_exporter_listen_port: "9116"
+grafana_uri: "localhost:9092"

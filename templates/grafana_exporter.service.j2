@@ -8,7 +8,9 @@ StartLimitInterval=0
 [Service]
 Type=simple
 Restart=always
-ExecStart=/usr/local/bin/grafana_exporter --grafana.uri=localhost:9092 --web.listen-address=:9113
+ExecStart={{ grafana_exporter_install_dir }}/grafana_exporter \
+          --grafana.uri={{ grafana_uri }} \
+          --web.listen-address=:{{ grafana_exporter_listen_port }}
 ExecReload=/bin/kill -HUP $MAINPID
 SyslogIdentifier=grafana_exporter
 RestartSec=1

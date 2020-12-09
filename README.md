@@ -11,6 +11,12 @@ Deploy [grafana_exporter](https://github.com/frodenas/grafana_exporter/) to expo
 | Name           | Default Value | Description                        |
 | -------------- | ------------- | -----------------------------------|
 | `grafana_exporter_version` | 0.1.0 | grafana_exporter version |
+| `grafana_exporter_temp_dir` | /tmp | temporary directory to uncompress package |
+| `grafana_exporter_install_dir` | /usr/local/bin | directory to install binary |
+| `grafana_exporter_force_install` | false | force install variable |
+| `grafana_exporter_listen_port` | 9116 | port to expose prometheus metrics |
+| `grafana_uri` | localhost:9092 | port to expose prometheus metrics |
+
 
 ## Examples
 
@@ -28,4 +34,4 @@ Deploy [grafana_exporter](https://github.com/frodenas/grafana_exporter/) to expo
 
 ## License
 
-This project is licensed under MIT License. See [LICENSE](/LICENSE) for more details.
+This project is licensed under Apache License. See [LICENSE](/LICENSE) for more details.
