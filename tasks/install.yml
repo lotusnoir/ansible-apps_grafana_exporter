@@ -1,0 +1,58 @@
+---
+- name: "Check for grafana_exporter binary"
+  stat:
+    path: '{{ grafana_exporter_install_dir }}/grafana_exporter'
+  changed_when: false
+  register: grafana_exporter_install
+
+- when: not grafana_exporter_install.stat.exists or grafana_exporter_force_install|bool
+  block:
+    - name: "Install requierements"
+      package:
+        name: "ca-certificates"
+        state: present
+
+    - name: "Download grafana_exporter..."
+      get_url:
+        url: '{{ grafana_exporter_tgz_url }}'
+        dest: '{{ grafana_exporter_temp_dir }}/{{ grafana_exporter_tgz }}'
+        timeout: '60'
+        mode: '0644'
+
+    - name: "Ensure install directory exists"
+      file:
+        path: '{{ item }}'
+        state: directory
+        mode: '0755'
+      with_items:
+        - '{{ grafana_exporter_install_dir }}'
+        - '{{ grafana_exporter_temp_dir }}/grafana_exporter'
+
+    - name: "Unarchive grafana_exporter..."
+      unarchive:
+        src: '{{ grafana_exporter_temp_dir }}/{{ grafana_exporter_tgz }}'
+        dest: '{{ grafana_exporter_temp_dir }}/grafana_exporter'
+        extra_opts: [--strip-components=1]
+        remote_src: true
+        mode: '0644'
+
+    - name: "Copy grafana_exporter binary..."
+      copy:
+        src: '{{ grafana_exporter_temp_dir }}/grafana_exporter/grafana_exporter'
+        dest: '{{ grafana_exporter_install_dir }}/grafana_exporter'
+        remote_src: true
+        mode: '0755'
+
+- name: "Create systemd for grafana_exporter"
+  template:
+    src: 'grafana_exporter.service.j2'
+    dest: '/etc/systemd/system/grafana_exporter.service'
+    mode: '0640'
+  notify: "restart grafana_exporter"
+
+- name: "Start grafana_exporter.service"
+  service:
+    name: grafana_exporter
+    state: started
+    enabled: true
+    daemon_reload: true
