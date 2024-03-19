@@ -49,7 +49,7 @@
     src: 'grafana_exporter.service.j2'
     dest: '/etc/systemd/system/grafana_exporter.service'
     mode: '0640'
-  notify: "restart grafana_exporter"
+  notify: "Restart grafana_exporter"
 
 - name: "Start grafana_exporter.service"
   ansible.builtin.service:

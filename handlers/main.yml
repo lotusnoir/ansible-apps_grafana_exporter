@@ -1,5 +1,5 @@
 ---
-- name: "restart grafana_exporter"
+- name: "Restart grafana_exporter"
   ansible.builtin.service:
     name: "grafana_exporter"
     state: "restarted"
